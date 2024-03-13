@@ -69,13 +69,17 @@ class MyState extends State<MyStateWidget> {
   //이벤트 콜백함수..
   void toggleFavorite() {
     print('state... toggleFavorite');
-    if(favorited){
-      favoriteCount -= 1;
-      favorited = false;
-    }else {
-      favoriteCount += 1;
-      favorited = true;
-    }
+    //상태 값을 변경하면서 화면 갱신 명령...
+    setState(() {
+      if(favorited){
+        favoriteCount -= 1;
+        favorited = false;
+      }else {
+        favoriteCount += 1;
+        favorited = true;
+      }
+    });
+
   }
 
   @override
