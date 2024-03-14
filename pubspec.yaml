@@ -39,6 +39,7 @@ dependencies:
   provider: ^6.1.2
   fluttertoast: ^8.2.4
   smooth_page_indicator: ^1.1.0
+  font_awesome_flutter: ^10.7.0
 
 
 dev_dependencies:
@@ -69,6 +70,8 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - images/
+    - assets/icon/
+    - assets/text/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
