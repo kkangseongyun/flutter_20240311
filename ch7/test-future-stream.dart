@@ -73,7 +73,21 @@ Future<List<Article>> getServerData(String page) async {
 }
 
 class FutureWidget extends StatelessWidget {
-
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<Article>>(
+        future: getServerData("1"),
+        builder: (context, snapshot){
+          if(snapshot.hasData){
+            return getWidget(snapshot.data ?? []);
+          }else if(snapshot.hasError){
+            return Text("${snapshot.error}");
+          }
+          //초기 데이터 발생 전까지 보여야할 위젯..
+          return CircularProgressIndicator();
+        }
+    );
+  }
 
 }
 
@@ -85,6 +99,45 @@ class StreamWidget extends StatefulWidget {
 
 class StreamState extends State<StreamWidget> {
   List<Article> list = [];
+
+  StreamController<List<Article>> streamController = StreamController();
+
+  void getData(int i) async {
+    int page = ++i;
+    await getServerData(page.toString())
+      .then((value) {
+        streamController.add(value);
+    });
+  }
+
+  peridoicStream() async {
+    Duration duration = Duration(seconds: 5);
+    Stream stream = Stream.periodic(duration, getData);
+    stream = stream.take(5);
+    stream.listen((event) { print('서버요청..'); });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    peridoicStream();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+        stream: streamController.stream,
+        builder: (BuildContext context, AsyncSnapshot snapshot){
+          if(snapshot.hasData){
+            list.addAll(snapshot.data);
+            return getWidget(list);
+          }else if(snapshot.hasError){
+            return Text("${snapshot.error}");
+          }
+          return CircularProgressIndicator();
+        }
+    );
+  }
 
 
 }
